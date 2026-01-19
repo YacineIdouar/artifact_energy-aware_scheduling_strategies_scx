@@ -28,6 +28,7 @@ parser.add_argument('-X', '--scx',
                     dest='scx_sched',
                     type=str,
                     required=False,
+                    default=None,
                     help=f'selected sched ext scheduler in  {params.scx_scheds}')
 
 parser.add_argument('-M', '--scx-mode',
@@ -35,6 +36,7 @@ parser.add_argument('-M', '--scx-mode',
                     dest='scx_mode',
                     type=str,
                     required=False,
+                    default=None,
                     help=f'selected sched ext mode in  {params.scx_modes}')
 
 args = parser.parse_args()
@@ -92,7 +94,7 @@ def run_schedulings(scheds, n_frames):
             output = str(process.communicate()[0])
 
             lines = output.split("\\n");
-            if args.scx_sched != None and args.scx_mode != None:
+            if args.scx_sched != None and args.scx_mode != None :
                 f = open(path_raw_pinning + sched + "_" + args.scx_sched + "_" + args.scx_mode + "_" + str(i) + ".txt", "w")
             else:
                 f = open(path_raw_pinning + sched + "_" + str(i) + ".txt", "w")
