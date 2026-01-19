@@ -78,10 +78,17 @@ def _produce_csv_for_pgfplot(fw, sched, pinning, n_try):
         std = max_thr
     else:
         std = stats.stdev(thr_values)
+    
+    # Check if sched ext is used
+    import re
+    pinning_col = pinning
+    search = re.search(r'_(lavd|bpfland)_(default|energy|performance)(?:_|$)', sched)
+    if search:
+        pinning_col = search.group(1) + "_" + search.group(2)
 
     fw.write(node_name       + "," +
              sched_short     + "," +
-             pinning         + "," +
+             pinning_col     + "," +
              str(max_little) + "," +
              str(max_big)    + "," +
              str(n_little)   + "," +
