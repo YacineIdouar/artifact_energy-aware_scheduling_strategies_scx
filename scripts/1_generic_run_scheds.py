@@ -54,7 +54,7 @@ if args.scx_sched not in params.scx_scheds:
   parser.print_help()
   sys.exit(1)
 
-if args.scx_mode not in params.scx_mode:
+if args.scx_mode not in params.scx_modes:
   print(f"(EE) Unsupported scx mode ({args.scx_mode})")
   parser.print_help()
   sys.exit(1)
