@@ -35,7 +35,7 @@ parser.add_argument('-M', '--scx-mode',
                     dest='scx_mode',
                     type=str,
                     required=False,
-                    help=f'selected sched ext mode in  {params.scx_mode}')
+                    help=f'selected sched ext mode in  {params.scx_modes}')
 
 args = parser.parse_args()
 
