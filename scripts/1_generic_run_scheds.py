@@ -28,7 +28,7 @@ parser.add_argument('-X', '--scx',
                     dest='scx_sched',
                     type=str,
                     required=False,
-                    help=f'selected sched ext scheduler in  {params.pinning_strategies}')
+                    help=f'selected sched ext scheduler in  {params.scx_scheds}')
 
 parser.add_argument('-M', '--scx-mode',
                     action='store',
@@ -46,16 +46,6 @@ if args.node not in params.nodes:
 
 if args.strategy not in params.pinning_strategies:
   print(f"(EE) Unsupported strategy ({args.strategy})")
-  parser.print_help()
-  sys.exit(1)
-
-if args.scx_sched not in params.scx_scheds:
-  print(f"(EE) Unsupported scx scheduler ({args.scx_sched})")
-  parser.print_help()
-  sys.exit(1)
-
-if args.scx_mode not in params.scx_modes:
-  print(f"(EE) Unsupported scx mode ({args.scx_mode})")
   parser.print_help()
   sys.exit(1)
 
