@@ -50,12 +50,12 @@ if args.strategy not in params.pinning_strategies:
   sys.exit(1)
 
 if args.scx_sched not in params.scx_scheds:
-  print(f"(EE) Unsupported scx scheduler ({args.scx_scheds})")
+  print(f"(EE) Unsupported scx scheduler ({args.scx_sched})")
   parser.print_help()
   sys.exit(1)
 
 if args.scx_mode not in params.scx_modes:
-  print(f"(EE) Unsupported scx mode ({args.scx_modes})")
+  print(f"(EE) Unsupported scx mode ({args.scx_mode})")
   parser.print_help()
   sys.exit(1)
 
