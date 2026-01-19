@@ -31,9 +31,19 @@ def produce_csv(node_name, R_max, scheds, filename, pinning):
         for R in range(1, R_max + 1):
             sched = node_name + "_os_R" + str(R)
             _produce_csv(fw, sched, pinning, 15)
+        for scx_sch in ["lavd", "bpfland"]:
+            for scx_m in ["default", "energy", "performance"]:
+                sched = node_name + "_os_R" + str(R) + "_" + scx_sch + "_" + scx_m
+                _produce_csv(fw, sched, pinning, 15)
     else:
         for sched in scheds:
             _produce_csv(fw, sched, pinning, 10)
+        if pinning == "loose":
+            for scx_sch in ["lavd", "bpfland"]:
+                for scx_m in ["default", "energy", "performance"]:
+                    for sched in scheds:
+                        sched_scx = sched + "_" + scx_sch + "_" + scx_m
+                        _produce_csv(fw, sched_scx, pinning, 10)
     fw.close()
 
 def _produce_csv_for_pgfplot(fw, sched, pinning, n_try):
@@ -90,9 +100,19 @@ def produce_csv_for_pgfplot(node_name, R_max, scheds, filename, pinning):
         for R in range(1, R_max + 1):
             sched = node_name + "_os_R" + str(R)
             _produce_csv_for_pgfplot(fw, sched, pinning, 15)
+            for scx_sch in ["lavd", "bpfland"]:
+                for scx_m in ["default", "energy", "performance"]:
+                    sched = node_name + "_os_R" + str(R) + "_" + scx_sch + "_" + scx_m
+                    _produce_csv(fw, sched, pinning, 15)
     else:
         for sched in scheds:
             _produce_csv_for_pgfplot(fw, sched, pinning, 10)
+            if pinning == "loose":
+                for scx_sch in ["lavd", "bpfland"]:
+                    for scx_m in ["default", "energy", "performance"]:
+                        for sched in scheds:
+                            sched_scx = sched + "_" + scx_sch + "_" + scx_m
+                            _produce_csv(fw, sched_scx, pinning, 10)
     fw.close()
 
 for pinning in params.pinning_strategies:

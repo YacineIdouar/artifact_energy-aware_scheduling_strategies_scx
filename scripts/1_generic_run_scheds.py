@@ -23,6 +23,20 @@ parser.add_argument('-S', '--strategy',
                     required=False,
                     help=f'selected strategy in {params.pinning_strategies}')
 
+parser.add_argument('-X', '--scx',
+                    action='store',
+                    dest='scx_sched',
+                    type=str,
+                    required=False,
+                    help=f'selected sched ext scheduler in  {params.pinning_strategies}')
+
+parser.add_argument('-M', '--scx-mode',
+                    action='store',
+                    dest='scx_mode',
+                    type=str,
+                    required=False,
+                    help=f'selected sched ext mode in  {params.scx_mode}')
+
 args = parser.parse_args()
 
 if args.node not in params.nodes:
@@ -32,6 +46,16 @@ if args.node not in params.nodes:
 
 if args.strategy not in params.pinning_strategies:
   print(f"(EE) Unsupported strategy ({args.strategy})")
+  parser.print_help()
+  sys.exit(1)
+
+if args.scx_sched not in params.scx_scheds:
+  print(f"(EE) Unsupported scx scheduler ({args.scx_sched})")
+  parser.print_help()
+  sys.exit(1)
+
+if args.scx_mode not in params.scx_mode:
+  print(f"(EE) Unsupported scx mode ({args.scx_mode})")
   parser.print_help()
   sys.exit(1)
 
@@ -78,7 +102,10 @@ def run_schedulings(scheds, n_frames):
             output = str(process.communicate()[0])
 
             lines = output.split("\\n");
-            f = open(path_raw_pinning + sched + "_" + str(i) + ".txt", "w")
+            if args.scx_sched != None and args.scx_mode != None:
+                f = open(path_raw_pinning + sched + "_" + args.scx_sched + "_" + args.scx_mode + "_" + str(i) + ".txt", "w")
+            else:
+                f = open(path_raw_pinning + sched + "_" + str(i) + ".txt", "w")
             for line in lines:
                 f.write(line + "\n")
             f.close()
@@ -89,7 +116,7 @@ def run_os(R_max, n_frames):
         run_cmd = [path_dvbs2_exe,
                '--sim-stats',
                '--src-type', 'USER',
-               '--src-path', path_conf_file,
+               '--src-path', params.path_conf_file,
                '--rad-type', 'USER_BIN',
                '--rad-rx-file-path', path_input_iqs,
                '-F', str(n_frames),
@@ -116,7 +143,10 @@ def run_os(R_max, n_frames):
             output = str(process.communicate()[0])
 
             lines = output.split("\\n");
-            f = open(path_raw_pinning + args.node + "_os_R" + str(R) + "_" + str(i) + ".txt", "w")
+            if args.scx_sched != None and args.scx_mode != None:
+                f = open(path_raw_pinning + args.node + "_os_R" + str(R) + "_" + args.scx_sched + "_" + args.scx_mode + "_" + str(i) + ".txt", "w")
+            else:
+                f = open(path_raw_pinning + args.node + "_os_R" + str(R) + "_" + str(i) + ".txt", "w")
             for line in lines:
                 f.write(line + "\n")
             f.close()
