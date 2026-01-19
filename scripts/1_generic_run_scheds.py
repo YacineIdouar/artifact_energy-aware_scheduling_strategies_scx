@@ -65,9 +65,9 @@ n_exe_per_sched_os  = 15
 path_dvbs2_exe      = f"../build_{args.node}/bin/dvbs2_rx_sched"
 path_scheds_pinning = f"{params.path_schedulings}{args.strategy}/"
 path_raw_pinning    = f"{params.path_raw}{args.strategy}/"
-path_input_iqs      = f"/scratch/{params.user}-nfs/dvbs2/out_tx.bin"
+path_input_iqs      = f"../build_{args.node}/out_tx.bin"
 if (args.node in ["iml-ia770", "ai370"]):
-    path_input_iqs  = f"/scratch/{params.user}/dvbs2/out_tx.bin"
+    path_input_iqs  = f"../build_{args.node}/out_tx.bin"
 ###############################################################################
 
 def run_schedulings(scheds, n_frames):
