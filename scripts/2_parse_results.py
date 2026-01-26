@@ -31,15 +31,15 @@ def produce_csv(node_name, R_max, scheds, filename, pinning):
         for R in range(1, R_max + 1):
             sched = node_name + "_os_R" + str(R)
             _produce_csv(fw, sched, pinning, 15)
-        for scx_sch in ["lavd", "bpfland","rusty"]:
-                sched = node_name + "_os_R" + str(R) + "_" + scx_sch
-                _produce_csv(fw, sched, pinning, 15)
+            for scx_sch in ["lavd", "bpfland"]:
+                    sched = node_name + "_os_R" + str(R) + "_" + scx_sch
+                    _produce_csv(fw, sched, pinning, 15)
     else:
         for sched in scheds:
             _produce_csv(fw, sched, pinning, 10)
-            for scx_sch in ["lavd", "bpfland","rusty"]:
-                    sched = sched + "_" + scx_sch
-                    _produce_csv(fw, sched, pinning, 10)
+            for scx_sch in ["lavd", "bpfland"]:
+                new_sched = sched + "_" + scx_sch
+                _produce_csv(fw, new_sched, pinning, 10)
     fw.close()
 
 def _produce_csv_for_pgfplot(fw, sched, pinning, n_try):
@@ -78,7 +78,7 @@ def _produce_csv_for_pgfplot(fw, sched, pinning, n_try):
     # Check if sched ext is used
     import re
     pinning_col = pinning
-    search = re.search(r'_(lavd|bpfland|rusty)(?:_|$)', sched)
+    search = re.search(r'_(lavd|bpfland)(?:_|$)', sched)
     if search:
         pinning_col = search.group(1)
 
@@ -103,15 +103,15 @@ def produce_csv_for_pgfplot(node_name, R_max, scheds, filename, pinning):
         for R in range(1, R_max + 1):
             sched = node_name + "_os_R" + str(R)
             _produce_csv_for_pgfplot(fw, sched, pinning, 15)
-            for scx_sch in ["lavd", "bpfland","rusty"]:
+            for scx_sch in ["lavd", "bpfland"]:
                 sched = node_name + "_os_R" + str(R) + "_" + scx_sch
                 _produce_csv_for_pgfplot(fw, sched, pinning, 15)
     else:
         for sched in scheds:
             _produce_csv_for_pgfplot(fw, sched, pinning, 10)
-            for scx_sch in ["lavd", "bpfland","rusty"]:
-                sched = sched + "_" + scx_sch
-                _produce_csv_for_pgfplot(fw, sched, pinning, 10)
+            for scx_sch in ["lavd", "bpfland"]:
+                new_sched = sched + "_" + scx_sch
+                _produce_csv_for_pgfplot(fw, new_sched, pinning, 10)
     fw.close()
 
 for pinning in params.pinning_strategies:

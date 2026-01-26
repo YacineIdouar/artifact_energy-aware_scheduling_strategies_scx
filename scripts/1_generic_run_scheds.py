@@ -128,9 +128,9 @@ def run_os(R_max, n_frames):
 
             lines = output.split("\\n");
             if args.scx_sched != None:
-                f = open(path_raw_pinning + args.node + "_os_R" + str(R) + "_" + args.scx_sched + "_" + str(i) + ".txt", "w")
+               f = open(path_raw_pinning + args.node + "_os_R" + str(R) + "_" + args.scx_sched + "_" + str(i) + ".txt", "w")
             else:
-                f = open(path_raw_pinning + args.node + "_os_R" + str(R) + "_" + str(i) + ".txt", "w")
+               f = open(path_raw_pinning + args.node + "_os_R" + str(R) + "_" + str(i) + ".txt", "w")
             for line in lines:
                 f.write(line + "\n")
             f.close()
