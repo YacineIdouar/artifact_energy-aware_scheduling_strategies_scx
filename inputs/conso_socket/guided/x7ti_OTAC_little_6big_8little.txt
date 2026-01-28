@@ -4,22 +4,6 @@
         73 0.0 0xff 22.5dC 18.986V 1.7833A 0.363J
         78 0.0 0xff 22.2dC 19.013V 1.5174A 0.537J
         91 0.0 0xff 22.1dC 19.002V 1.7227A 0.959J
-invalid entry 24 0x0
-invalid entry 0 0x0
-invalid entry 24 0x0
-invalid entry 0 0x0
-invalid entry 24 0x0
-invalid entry 0 0x0
-     30051 0.0 0xff 22.5dC 19.016V 1.3832A 859.554J
-     30052 0.0 0xff 22.3dC 19.002V 1.6427A 859.600J
-     30054 0.0 0xff 22.3dC 18.997V 1.6382A 859.641J
-     30055 0.0 0xff 22.8dC 18.990V 1.6639A 859.688J
-invalid entry 0 0x0
-invalid entry 24 0x0
-invalid entry 0 0x0
-invalid entry 24 0x0
-invalid entry 0 0x0
-invalid entry 24 0x0
         92 0.0 0xff 22.1dC 19.001V 1.5618A 0.997J
         94 0.0 0xff 22.5dC 18.990V 1.6447A 1.044J
         95 0.0 0xff 22.4dC 18.983V 1.6809A 1.091J

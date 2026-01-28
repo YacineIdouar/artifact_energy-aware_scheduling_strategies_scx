@@ -1,6 +1,7 @@
 import re
 import json
 import csv
+import sys
 
 import common.params as params
 
@@ -17,16 +18,15 @@ def get_rapl_info(txt_filename, verbose):
                 line = line.strip()
                 cols = line.split(" ")
                 cols = list(filter(None, cols))
-                # print(cols)
+                #print(cols)
                 if "Average" in line:
-                    rapl_mean = cols[9]
+                    rapl_mean = cols[14]
                 if "Minimum" in line:
-                    rapl_min = cols[9]
+                    rapl_min = cols[14]
                 if "Maximum" in line:
-                    rapl_max = cols[9]
+                    rapl_max = cols[14]
                 if "StdDev" in line:
-                    rapl_std = cols[9]
-
+                    rapl_std = cols[14]
     except IOError:
             print(f"'{txt_filename}' does not appear to exist, skipped.")
 
@@ -64,7 +64,7 @@ def get_thr_info(node_name, pinning, sched_short, strat, verbose):
     return thr_mean, thr_min, thr_max, thr_error, thr_std
 
 def get_sched_info(sched, pinning, verbose):
-    if pinning == "os":
+    if pinning == "os" or pinning == "lavd" or pinning == "bpfland":
         max_big = 0
         max_little = 0
     else:
@@ -85,7 +85,7 @@ def get_sched_info(sched, pinning, verbose):
             print(f"This should not happen, exiting (sched = {sched}).")
             sys.exit(-1)
 
-    if pinning == "os":
+    if pinning == "os" or pinning == "lavd" or pinning == "bpfland":
         sched_short = "OS"
         search = re.search('_os_R([0-9])', sched, re.IGNORECASE)
         if search:
@@ -131,7 +131,7 @@ def get_sched_info(sched, pinning, verbose):
     if verbose:
         print(f"strat = {strat}")
 
-    if (pinning == "os"):
+    if (pinning == "os"  or pinning == "lavd" or pinning == "bpfland"):
         n_big = 0
         n_little = 0
     else:

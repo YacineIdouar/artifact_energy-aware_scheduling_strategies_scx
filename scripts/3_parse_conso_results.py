@@ -6,8 +6,9 @@ import common.params as params
 import common.funcs as funcs
 
 verbose = False
-csv_header = "node_name,x_node_name,tag1,tag2,sched,pinning,x_pinning,max_little,max_big,n_little,n_big,strat,sck_v_mean,sck_v_min,sck_v_max,sck_v_std,sck_i_mean,sck_i_min,sck_i_max,sck_i_std,sck_w_mean,sck_w_min,sck_w_max,sck_w_minus,sck_w_plus,sck_w_std,sck_w_idle,sck_j_first,sck_j_last,sck_j_total,rapl_w_mean,rapl_w_min,rapl_w_max,rapl_w_std,rapl_w_idle,thr_mean,thr_min,thr_max,thr_minus,thr_plus,thr_error,thr_std,sck_ene_per_fra,rapl_ene_per_fra\n"
-pinning_id = {"loose": 1, "guided": 2, "packed": 3, "distant": 4, "os": 5}
+csv_header = "node_name,x_node_name,tag1,tag2,sched,x_sched,pinning,x_pinning,max_little,max_big,n_little,n_big,strat,sck_v_mean,sck_v_min,sck_v_max,sck_v_std,sck_i_mean,sck_i_min,sck_i_max,sck_i_std,sck_w_mean,sck_w_min,sck_w_max,sck_w_minus,sck_w_plus,sck_w_std,sck_w_idle,sck_j_first,sck_j_last,sck_j_total,rapl_w_mean,rapl_w_min,rapl_w_max,rapl_w_std,rapl_w_idle,thr_mean,thr_min,thr_max,thr_minus,thr_plus,thr_error,thr_std,sck_ene_per_fra,rapl_ene_per_fra\n"
+pinning_id = {"loose": 1, "guided": 2, "packed": 3, "distant": 4, "os": 5, "lavd": 6, "bpfland": 7}
+sched_id   = {"2CATAC": 1, "FERTAC": 2, "HeRAD": 3, "OTAC_big": 4, "OTAC_little": 5, "os_R1": 6, "os_R2": 7, "os_R3": 8}
 
 def basic_stats(values, prefix):
     vmean = stats.mean(values)
@@ -64,6 +65,12 @@ def _get_raple_idle_power(node_name, verbose):
 
 def _produce_csv(fw_merged, fw, out_filename, pinning, sched, legacy, n_try):
     x_pinning = pinning_id[pinning]
+    if sched.split("_")[1] == "OTAC" or sched.split("_")[1] == "os":
+        sched_short = sched.split("_")[1] + "_" + sched.split("_")[2]
+    else:
+        sched_short = sched.split("_")[1]
+
+    x_sched = sched_id[sched_short]
     if n_try == 0:
         max_try = 1
     else:
@@ -184,6 +191,7 @@ def _produce_csv(fw_merged, fw, out_filename, pinning, sched, legacy, n_try):
           tag1                  + "," + \
           tag2                  + "," + \
           sched_short           + "," + \
+          str(x_sched)          + "," + \
           pinning               + "," + \
           str(x_pinning)        + "," + \
           str(max_little)       + "," + \
@@ -231,7 +239,7 @@ def produce_csv(fw_merged, node_name, R_max, scheds, out_filename, legacy):
     fw = open(out_filename, "w")
     fw.write(csv_header)
     for pinning in params.pinning_strategies:
-        if pinning == "os":
+        if pinning == "os" or pinning == "lavd" or pinning == "bpfland":
             for R in range (1, R_max + 1):
                 sched = node_name + "_os_R" + str(R)
                 if node_name == "m1u":
@@ -246,9 +254,9 @@ def produce_csv(fw_merged, node_name, R_max, scheds, out_filename, legacy):
 fw_merged = open(params.path_conso_postpro + "all_scheds.csv", "w")
 fw_merged.write(csv_header)
 
-produce_csv(fw_merged, "m1u",   6, params.scheds_m1u,   params.path_conso_postpro + "m1u_scheds.csv",   True )
-produce_csv(fw_merged, "opi5",  3, params.scheds_opi5,  params.path_conso_postpro + "opi5_scheds.csv",  False)
-produce_csv(fw_merged, "x7ti",  7, params.scheds_x7ti,  params.path_conso_postpro + "x7ti_scheds.csv",  False)
-produce_csv(fw_merged, "ai370", 3, params.scheds_ai370, params.path_conso_postpro + "ai370_scheds.csv", False)
+#produce_csv(fw_merged, "m1u",   6, params.scheds_m1u,   params.path_conso_postpro + "m1u_scheds.csv",   True )
+#produce_csv(fw_merged, "opi5",  3, params.scheds_opi5,  params.path_conso_postpro + "opi5_scheds.csv",  False)
+produce_csv(fw_merged, "x7ti",  3, params.scheds_x7ti,  params.path_conso_postpro + "x7ti_scheds.csv",  False)
+#produce_csv(fw_merged, "ai370", 3, params.scheds_ai370, params.path_conso_postpro + "ai370_scheds.csv", False)
 
 fw_merged.close()
