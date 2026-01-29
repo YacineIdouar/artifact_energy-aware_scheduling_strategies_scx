@@ -26,7 +26,9 @@ def basic_stats(values, prefix):
 def compute_ene_per_fra(instant_power, throughput_mbps, fra_size):
     throughput_bps = throughput_mbps * 1e6 # thr in bits per second
     throughput_fps = throughput_bps / fra_size # thr in frames per second
-    time_of_one_frame = 1 / throughput_fps
+    time_of_one_frame = +inf
+    if throughput_fps != 0:
+        time_of_one_frame = 1 / throughput_fps
     ene_per_fra = time_of_one_frame * instant_power
     return ene_per_fra
 
@@ -184,7 +186,7 @@ def _produce_csv(fw_merged, fw, out_filename, pinning, sched, legacy, n_try):
         sck_j_firts = 0
         sck_j_last = 0
         sck_j_total = 0
-
+    print('Computing for file : ',in_filename)
     sck_ene_per_fra = compute_ene_per_fra(float(sck_w_mean), float(thr_mean), 14232)
     rapl_ene_per_fra = compute_ene_per_fra(float(rapl_w_mean), float(thr_mean), 14232)
     x_node_name = params.x[node_name]
@@ -257,9 +259,9 @@ def produce_csv(fw_merged, node_name, R_max, scheds, out_filename, legacy):
 fw_merged = open(params.path_conso_postpro + "all_scheds.csv", "w")
 fw_merged.write(csv_header)
 
-#produce_csv(fw_merged, "m1u",   6, params.scheds_m1u,   params.path_conso_postpro + "m1u_scheds.csv",   True )
-#produce_csv(fw_merged, "opi5",  3, params.scheds_opi5,  params.path_conso_postpro + "opi5_scheds.csv",  False)
-produce_csv(fw_merged, "x7ti",  3, params.scheds_x7ti,  params.path_conso_postpro + "x7ti_scheds.csv",  False)
-#produce_csv(fw_merged, "ai370", 3, params.scheds_ai370, params.path_conso_postpro + "ai370_scheds.csv", False)
+produce_csv(fw_merged, "m1u",   6, params.scheds_m1u,   params.path_conso_postpro + "m1u_scheds.csv",   True )
+produce_csv(fw_merged, "opi5",  3, params.scheds_opi5,  params.path_conso_postpro + "opi5_scheds.csv",  False)
+produce_csv(fw_merged, "x7ti",  7, params.scheds_x7ti,  params.path_conso_postpro + "x7ti_scheds.csv",  False)
+produce_csv(fw_merged, "ai370", 3, params.scheds_ai370, params.path_conso_postpro + "ai370_scheds.csv", False)
 
 fw_merged.close()

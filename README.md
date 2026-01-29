@@ -67,12 +67,12 @@ This code has been tested on systems with the following basic characteristics:
 
 - **Hardware resources**: an ARM or x86_64 processor, few GB of RAM and few MB 
   of storage.
-- **Operating systems**: Linux Ubuntu 24.04 LTS and macOS 14.6.1 has been 
-  tested.
+- **Operating systems**: Linux Ubuntu 24.04 LTS, Linux Ubuntu 25.04 release 
+  and macOS 14.6.1 have been tested.
 - **Software libraries needed**: Python 3 with `subprocess`, `argparse`, `sys`,
   `statistics`, and `math` packages.
-- **Input datasets**: All the measurements files are already available in the
-  artifact. The script to reproduce them is also available in the repository.
+- **Input datasets**: All the measurement files are already available in the
+  artifact. The scripts to reproduce them are also available in the repository.
 - **Output datasets**: All the preprocessed data is also already available in 
   the artifact.
 
@@ -89,6 +89,8 @@ base folder:
 ```
 ├── inputs
 │   ├── conso_rapl
+│   │   ├── bpfland
+│   │   │   └── [x7ti]_bpfland_R*.txt
 │   │   ├── distant
 │   │   │   └── [ai370|x7ti]_[2CATAC|FERTAC|HeRAD|OTAC]_*.txt
 │   │   ├── guided
@@ -97,8 +99,12 @@ base folder:
 │   │   │   └── [ai370|x7ti]_os_R*.txt
 │   │   ├── packed
 │   │   │   └── [ai370|x7ti]_[2CATAC|FERTAC|HeRAD|OTAC]_*.txt
+│   │   ├── lavd
+│   │   │   └── [x7ti]_lavd_R*.txt
 │   │   └── [ai370|x7ti]_idle.txt
 │   ├── conso_socket
+│   │   ├── bpfland
+│   │   │   └── [x7ti]_bpfland_R*.txt
 │   │   ├── distant
 │   │   │   └── [ai370|m1u|opi5|x7ti]_[2CATAC|FERTAC|HeRAD|OTAC]_*.txt
 │   │   ├── guided
@@ -107,6 +113,8 @@ base folder:
 │   │   │   └── [ai370|m1u|opi5|x7ti]_os_R*.txt
 │   │   ├── packed
 │   │   │   └── [ai370|m1u|opi5|x7ti]_[2CATAC|FERTAC|HeRAD|OTAC]_*.txt
+│   │   ├── lavd
+│   │   │   └── [x7ti]_lavd_R*.txt
 │   │   └── [ai370|m1u|opi5|x7ti]_idle.txt
 │   ├── schedulings
 │   │   ├── distant
@@ -119,6 +127,8 @@ base folder:
 │   │   │   └── [ai370|m1u|opi5|x7ti]_[2CATAC|FERTAC|HeRAD|OTAC]_*.json
 │   │   └── [ai370|m1u|opi5|x7ti]_results.csv
 │   └── throughput
+│       ├── bpfland
+│       │   └── [x7ti]_bpfland_R*.txt
 │       ├── distant
 │       │   └── [ai370|m1u|opi5|x7ti]_[2CATAC|FERTAC|HeRAD|OTAC]_*.txt
 │       ├── guided
@@ -127,8 +137,10 @@ base folder:
 │       │   └── [ai370|m1u|opi5|x7ti]_[2CATAC|FERTAC|HeRAD|OTAC]_*.txt
 │       ├── os
 │       │   └── [ai370|m1u|opi5|x7ti]_os_R*.txt
-│       └── packed
-│           └── [ai370|m1u|opi5|x7ti]_[2CATAC|FERTAC|HeRAD|OTAC]_*.txt
+│       ├── packed
+│       │   └── [ai370|m1u|opi5|x7ti]_[2CATAC|FERTAC|HeRAD|OTAC]_*.txt
+│       └── lavd
+│           └── [x7ti]_lavd_R*.txt
 ├── misc
 │   ├── frequencies
 │   │   └── [ai370|x7ti]_freqs.txt
@@ -182,7 +194,14 @@ policies:
 - `loose`: Contains OTAC, FERTAC, 2CATAC and HeRAD results for `loose` policy.
 - `guided`: Contains OTAC, FERTAC, 2CATAC and HeRAD results for `guided` policy.
 - `os`: Contains the OS scheduling results with different values of R (the 
-  number of replications).
+  number of replications), using the _Completely Fair scheduler (CFS)_ for 
+  the Orange Pi 5+ and _Earliest Eligible Virtual Deadline First (EEVDF)_
+  for the others.
+- `lavd`: Contains the OS scheduling results with different values of R (the 
+number of replications), using the _Latency Aware Virtual Deadline (LAVD)_ sched_ext 
+system scheduler (only for X7 Ti platform).
+- `bpfland`: Contains the OS scheduling results with different values of R (the 
+number of replications), using the _BPFLand_ sched_ext system scheduler (only for X7 Ti platform).
 
 Scripts are expected to be run from the base folder, and in the lexicographic
 order. For instance, to post-process the raw data again, one may do:
@@ -203,7 +222,7 @@ throughput, and one run of 1 min 30 seconds to gather the power measurements.
 ### 4.1 Compiling the DVB-S2 Transceiver
 
 The DVB-S2 has been compiled independently (Ubuntu 24.04) on each platform as 
-follow (`[platform_tag]` is a placeholder, see Section 4.3):
+follows (`[platform_tag]` is a placeholder, see Section 4.3):
 ```bash
 sudo apt install git cmake hwloc libhwloc-dev
 git clone https://github.com/aff3ct/dvbs2.git
@@ -215,8 +234,8 @@ cd build_[platform_tag]
 cmake .. -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-Wall -funroll-loops -march=native" -DSPU_LINK_HWLOC=ON -DDVBS2_LINK_UHD=OFF
 make -j16
 ```
-And, this artifact has been unzipped and copied inside the previously cloned 
-`dvbs2` folder like as follow:
+Then, this artifact has been unzipped and copied inside the previously cloned 
+`dvbs2` folder as follows:
 ```bash
 cp -r artifact_energy-aware_scheduling_strategies $SOMEWHERE/dvbs2/
 ```
@@ -224,7 +243,7 @@ cp -r artifact_energy-aware_scheduling_strategies $SOMEWHERE/dvbs2/
 ### 4.2 Generating DVB-S2 Rx Input IQs
 
 To re-run the experiments, the `out_tx.bin` file is missing. It has not been 
-added to this repository as it is an heavy binary file containing IQ samples 
+added to this repository as it is a heavy binary file containing IQ samples 
 (500 MB to 1 GB). To regenerate this file, one may run the following command:
 ```bash
 ./bin/dvbs2_tx --sim-stats --rad-type USER_BIN --rad-tx-file-path out_tx.bin -F 8 --src-type USER --src-path ../conf/src/K_14232.src --mod-cod QPSK-S_8/9 --tx-time-limit 1000
@@ -248,7 +267,7 @@ Four different platforms have been tested, identified by a tag:
 
 ### 4.4 Python Script Configuration
 
-Paths and options are defined in the `scripts/common/params/py` file. One may
+Paths and options are defined in the `scripts/common/params.py` file. One may
 want to change the `user`. Normally, other paths should be the same and left 
 unmodified.
 
@@ -288,7 +307,7 @@ cd artifact_energy-aware_scheduling_strategies
 ./scripts/1_generic_run_scheds.py -N [platform_tag] -S packed
 ./scripts/1_generic_run_scheds.py -N [platform_tag] -S loose
 
-# this requires a small modification in the code, explained bellow
+# this requires a small modification in the code, explained below
 ./scripts/1_generic_run_scheds.py -N [platform_tag] -S os
 ```
 
@@ -308,6 +327,15 @@ cd build_[platform_tag]
 make -j4
 ```
 
+To use the _sched_ext_ system schedulers, you need to install it by following the
+instructions given in the project [GitHub repository](https://github.com/sched-ext/scx).
+Then launch the schedulers using the following parameters:
+```bash
+scx_lavd --autopilot
+scx_bpfland -s 20000
+```
+The two schedulers need to be launched one at a time; they cannot run in parallel.
+
 ### 4.5.2 Energy Consumption
 
 For the socket energy consumption, we used a preliminary version of the Dalek's 
@@ -317,14 +345,14 @@ We plan to fully open this hardware in the future. For now, we are still working
 on it and it is not fully ready.
 
 For the SoC energy consumption we used the `powerstat` command line tool. It
-is itself based on Intel RAPL technology. We generated the samples with the 
+is based on Intel RAPL technology. We generated the samples with the 
 following command line:
 ```bash
 powerstat -cDHRf 2 30
 ```
-The previous command was run directly on the platforms that were executing the
+The previous command was run directly on the platforms executing the
 DVB-S2 receiver. In order to limit the probe effect, only one sample every 2 
-seconds is generated. This is done 30 times so it takes 1 minutes in total.
+seconds is generated. This is done 30 times, so it takes 1 minute in total.
 
-For both type of measurements, we manually saved the energy files into the 
+For both types of measurements, we manually saved the energy files into the 
 `inputs/conso_socket` and `inputs/conso_rapl` folders.

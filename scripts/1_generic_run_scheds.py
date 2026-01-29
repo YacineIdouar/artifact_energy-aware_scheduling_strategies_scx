@@ -103,15 +103,17 @@ def run_os(R_max, n_frames):
 
         try:
             with open('/sys/kernel/sched_ext/root/ops', 'r') as fh:
-                shceduler = fh.read().strip()
+                scheduler = fh.read().strip()
         except FileNotFoundError:
             print("/sys/kernel/sched_ext/root/ops file is not found, sched_ext is not supported")
             sys.exit(-1)
 
-        m = re.search(r'^([^_]+)', shceduler)
+        m = re.search(r'^([^_]+)', scheduler)
         if m:
             short_sched = m.group(1)
-            
+        else:
+            short_sched = scheduler.split('_')[0] if scheduler else ''
+
         if short_sched != args.strategy:
             print("The two supported sched_ext strategies are : lavd and bpfland : \n " \
 			"The requested scheduler is : ", args.strategy, "\n"\
