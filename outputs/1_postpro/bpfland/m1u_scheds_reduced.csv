@@ -1,0 +1,7 @@
+node,sched,pinning,max_little,max_big,n_little,n_big,strat,thr_mean,thr_min,thr_max,thr_error,thr_std
+m1u,OS_R1,bpfland,0,0,0,0,unknown,0.0,100000,0,-100000,0
+m1u,OS_R2,bpfland,0,0,0,0,unknown,0.0,100000,0,-100000,0
+m1u,OS_R3,bpfland,0,0,0,0,unknown,0.0,100000,0,-100000,0
+m1u,OS_R4,bpfland,0,0,0,0,unknown,0.0,100000,0,-100000,0
+m1u,OS_R5,bpfland,0,0,0,0,unknown,0.0,100000,0,-100000,0
+m1u,OS_R6,bpfland,0,0,0,0,unknown,0.0,100000,0,-100000,0
