@@ -8,7 +8,8 @@ import common.funcs as funcs
 verbose = False
 csv_header = "node_name,x_node_name,tag1,tag2,sched,x_sched,pinning,x_pinning,max_little,max_big,n_little,n_big,strat,sck_v_mean,sck_v_min,sck_v_max,sck_v_std,sck_i_mean,sck_i_min,sck_i_max,sck_i_std,sck_w_mean,sck_w_min,sck_w_max,sck_w_minus,sck_w_plus,sck_w_std,sck_w_idle,sck_j_first,sck_j_last,sck_j_total,rapl_w_mean,rapl_w_min,rapl_w_max,rapl_w_std,rapl_w_idle,thr_mean,thr_min,thr_max,thr_minus,thr_plus,thr_error,thr_std,sck_ene_per_fra,rapl_ene_per_fra\n"
 pinning_id = {"loose": 1, "guided": 2, "packed": 3, "distant": 4, "os": 5, "lavd": 6, "bpfland": 7}
-sched_id   = {"2CATAC": 1, "FERTAC": 2, "HeRAD": 3, "OTAC_big": 4, "OTAC_little": 5, "os_R1": 6, "os_R2": 7, "os_R3": 8}
+sched_id   = {"2CATAC": 1, "FERTAC": 2, "HeRAD": 3, "OTAC_big": 4, "OTAC_little": 5, "os_R1": 6, "os_R2": 7, "os_R3": 8, "os_R4": 9,
+              "os_R5": 10, "os_R6": 11, "os_R7":12}
 
 def basic_stats(values, prefix):
     vmean = stats.mean(values)
