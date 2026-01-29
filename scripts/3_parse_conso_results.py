@@ -66,8 +66,10 @@ def _get_raple_idle_power(node_name, verbose):
 
 def _produce_csv(fw_merged, fw, out_filename, pinning, sched, legacy, n_try):
     x_pinning = pinning_id[pinning]
-    if sched.split("_")[1] == "OTAC" or sched.split("_")[1] == "os":
+    if sched.split("_")[1] == "OTAC":
         sched_short = sched.split("_")[1] + "_" + sched.split("_")[2]
+    elif sched.split("_")[1] == "os" or sched.split("_")[1] == "lavd" or sched.split("_")[1] == "bpfland":
+        sched_short =  "os_" + sched.split("_")[2]
     else:
         sched_short = sched.split("_")[1]
 
