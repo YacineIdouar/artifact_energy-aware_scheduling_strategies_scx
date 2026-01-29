@@ -241,7 +241,7 @@ def produce_csv(fw_merged, node_name, R_max, scheds, out_filename, legacy):
     for pinning in params.pinning_strategies:
         if pinning == "os" or pinning == "lavd" or pinning == "bpfland":
             for R in range (1, R_max + 1):
-                sched = node_name + "_os_R" + str(R)
+                sched = node_name + "_"+ pinning +"_R" + str(R)
                 if node_name == "m1u":
                     _produce_csv(fw_merged, fw, out_filename, pinning, sched, legacy, 5)
                 else:

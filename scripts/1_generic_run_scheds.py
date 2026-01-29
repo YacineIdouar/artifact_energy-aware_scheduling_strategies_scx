@@ -3,6 +3,7 @@
 import subprocess
 import argparse
 import sys
+import re
 
 import common.params as params
 
@@ -86,6 +87,37 @@ def run_schedulings(scheds, n_frames):
             print("Done!")
 
 def run_os(R_max, n_frames):
+    runing_sys_sched = args.strategy
+
+    if args.strategy != "os":
+        try:
+            with open('/sys/kernel/sched_ext/state', 'r') as fh:
+                output = fh.read().strip()
+        except FileNotFoundError:
+            print("/sys/kernel/sched_ext/state file is not found, sched_ext is not supported")
+            sys.exit(-1)
+
+        if output == "disabled":
+            print("Sched_ext is disabled, no external scheduler is running")
+            sys.exit(-1)
+
+        try:
+            with open('/sys/kernel/sched_ext/root/ops', 'r') as fh:
+                shceduler = fh.read().strip()
+        except FileNotFoundError:
+            print("/sys/kernel/sched_ext/root/ops file is not found, sched_ext is not supported")
+            sys.exit(-1)
+
+        m = re.search(r'^([^_]+)', shceduler)
+        if m:
+            short_sched = m.group(1)
+            
+        if short_sched != args.strategy:
+            print("The two supported sched_ext strategies are : lavd and bpfland : \n " \
+			"The requested scheduler is : ", args.strategy, "\n"\
+            "The running scheduler is : ", short_sched)
+            sys.exit(-1)
+
     for R in range(1,R_max+1):
         run_cmd = [path_dvbs2_exe,
                '--sim-stats',
@@ -104,7 +136,7 @@ def run_os(R_max, n_frames):
                '-P', '100',
                '--rx-time-limit', '60000']
 
-        print("Current sched is: OS");
+        print("Current sched is: ", str(runing_sys_sched).upper());
         print("Command line is:", end=" ")
         for p in run_cmd:
             print(p, end=" ")
@@ -117,8 +149,8 @@ def run_os(R_max, n_frames):
             output = str(process.communicate()[0])
 
             lines = output.split("\\n");
-            f = open(path_raw_pinning + args.node + "_os_R" + str(R) + "_" + str(i) + ".txt", "w")
-            
+            f = open(path_raw_pinning + args.node + "_" + runing_sys_sched + "_R" + str(R) + "_" + str(i) + ".txt", "w")
+
             for line in lines:
                 f.write(line + "\n")
             f.close()
@@ -133,7 +165,7 @@ if (args.node == "x7ti"):
 if (args.node == "ai370"):
     n_frames = 16
 
-if args.strategy == "os":
+if  args.strategy == "os" or args.strategy == "lavd" or args.strategy == "bpfland":
     if (args.node == "m1u"):
         R_max = 6
         run_os(R_max, n_frames)

@@ -87,7 +87,7 @@ def get_sched_info(sched, pinning, verbose):
 
     if pinning == "os" or pinning == "lavd" or pinning == "bpfland":
         sched_short = "OS"
-        search = re.search('_os_R([0-9])', sched, re.IGNORECASE)
+        search = re.search('_' + pinning + '_R([0-9])', sched, re.IGNORECASE)
         if search:
             sched_short = sched_short + "_R" + search.group(1)
         else:

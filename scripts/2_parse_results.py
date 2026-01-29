@@ -29,7 +29,7 @@ def produce_csv(node_name, R_max, scheds, filename, pinning):
     fw.write("sched_name,throughput_mbps\n")
     if pinning == "os" or pinning == "lavd" or pinning == "bpfland":
         for R in range(1, R_max + 1):
-            sched = node_name + "_os_R" + str(R)
+            sched = node_name + "_" + pinning + "_R" + str(R)
             _produce_csv(fw, sched, pinning, 15)
     else:
         for sched in scheds:
@@ -88,7 +88,7 @@ def produce_csv_for_pgfplot(node_name, R_max, scheds, filename, pinning):
     fw.write("node,sched,pinning,max_little,max_big,n_little,n_big,strat,thr_mean,thr_min,thr_max,thr_error,thr_std\n")
     if pinning == "os" or pinning == "lavd" or pinning == "bpfland":
         for R in range(1, R_max + 1):
-            sched = node_name + "_os_R" + str(R)
+            sched = node_name + "_" + pinning + "_R" + str(R)
             _produce_csv_for_pgfplot(fw, sched, pinning, 15)
     else:
         for sched in scheds:
@@ -96,12 +96,12 @@ def produce_csv_for_pgfplot(node_name, R_max, scheds, filename, pinning):
     fw.close()
 
 for pinning in params.pinning_strategies:
-    #produce_csv("opi5",  3, params.scheds_opi5,  params.path_postpro + "/" + pinning + "/" + "opi5_scheds.csv",  pinning)
-    #produce_csv("m1u",   6, params.scheds_m1u,   params.path_postpro + "/" + pinning + "/" + "m1u_scheds.csv",   pinning)
+    produce_csv("opi5",  3, params.scheds_opi5,  params.path_postpro + "/" + pinning + "/" + "opi5_scheds.csv",  pinning)
+    produce_csv("m1u",   6, params.scheds_m1u,   params.path_postpro + "/" + pinning + "/" + "m1u_scheds.csv",   pinning)
     produce_csv("x7ti",  7, params.scheds_x7ti,  params.path_postpro + "/" + pinning + "/" + "x7ti_scheds.csv",  pinning)
-    #produce_csv("ai370", 3, params.scheds_ai370, params.path_postpro + "/" + pinning + "/" + "ai370_scheds.csv", pinning)
+    produce_csv("ai370", 3, params.scheds_ai370, params.path_postpro + "/" + pinning + "/" + "ai370_scheds.csv", pinning)
 
-    #produce_csv_for_pgfplot("opi5",  3, params.scheds_opi5,  params.path_postpro + "/" + pinning + "/" + "opi5_scheds_reduced.csv",  pinning)
-    #produce_csv_for_pgfplot("m1u",   6, params.scheds_m1u,   params.path_postpro + "/" + pinning + "/" + "m1u_scheds_reduced.csv",   pinning)
+    produce_csv_for_pgfplot("opi5",  3, params.scheds_opi5,  params.path_postpro + "/" + pinning + "/" + "opi5_scheds_reduced.csv",  pinning)
+    produce_csv_for_pgfplot("m1u",   6, params.scheds_m1u,   params.path_postpro + "/" + pinning + "/" + "m1u_scheds_reduced.csv",   pinning)
     produce_csv_for_pgfplot("x7ti",  7, params.scheds_x7ti,  params.path_postpro + "/" + pinning + "/" + "x7ti_scheds_reduced.csv",  pinning)
-    #produce_csv_for_pgfplot("ai370", 3, params.scheds_ai370, params.path_postpro + "/" + pinning + "/" + "ai370_scheds_reduced.csv", pinning)
+    produce_csv_for_pgfplot("ai370", 3, params.scheds_ai370, params.path_postpro + "/" + pinning + "/" + "ai370_scheds_reduced.csv", pinning)
