@@ -20,13 +20,13 @@ def get_rapl_info(txt_filename, verbose):
                 cols = list(filter(None, cols))
                 #print(cols)
                 if "Average" in line:
-                    rapl_mean = cols[14]
+                    rapl_mean = cols[10]
                 if "Minimum" in line:
-                    rapl_min = cols[14]
+                    rapl_min = cols[10]
                 if "Maximum" in line:
-                    rapl_max = cols[14]
+                    rapl_max = cols[10]
                 if "StdDev" in line:
-                    rapl_std = cols[14]
+                    rapl_std = cols[10]
     except IOError:
             print(f"'{txt_filename}' does not appear to exist, skipped.")
 
